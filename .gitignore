@@ -1,1 +1,5 @@
+#데이터베이스 URL
 databaseURL.py
+
+#데이터베이스 파일
+*.csv

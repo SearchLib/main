@@ -21,13 +21,16 @@ def get_db():
 
 @app.get("/wake/{bookName}")
 def getLibrary(bookName: str, db: Session = Depends(get_db)):
+    ##현재 유저의 access가 0이면 return
     book = db.query(Book).filter(Book.bookName == bookName).first()
     if book is None:
         raise HTTPException(status_code=404, detail="Book not found")
     exist = db.query(Exist).filter(Exist.bookId == book.bookId).all()
     libList = []
     for e in exist:
-        lib = db.query(Library).filter(Library.libId == e.libId).first()
+        distance = func.sqrt(func.pow(Library.latitude - 37.5665, 2) + func.pow(Library.longitude - 126.9780, 2))
+        ##임시 현재 위치
+        lib = db.query(Library).filter(Library.libId == e.libId).first() + distance
         libList.append(lib)
-    ##순서 정렬 필요
+    libList.sort(key=lambda x: x.distance)
     return libList

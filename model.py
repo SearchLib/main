@@ -1,6 +1,6 @@
 __package__ = "main"
 
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import validates, declarative_base
 from database import Base
 
@@ -22,8 +22,8 @@ class Library(Base):
 
     libId = Column(Integer, primary_key=True, index=True)
     libName = Column(String(30))
-    latitude = Column(float)
-    longitude = Column(float)
+    latitude = Column(Float)
+    longitude = Column(Float)
     open = Column(String(255))
 
 class Exist(Base):

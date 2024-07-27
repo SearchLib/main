@@ -10,11 +10,32 @@ import os
 class Book(Base):
     __tablename__ = "Book"
 
+    bookId = Column(Integer, primary_key=True, index=True)
+    callNum1 = Column(String(10))
+    callNum2 = Column(String(10))
+    bookName = Column(String(255))
+    writer = Column(String(30))
+    published = Column(Integer)
+
 class Library(Base):
     __tablename__ = "Library"
+
+    libId = Column(Integer, primary_key=True, index=True)
+    libName = Column(String(30))
+    latitude = Column(float)
+    longitude = Column(float)
+    open = Column(String(255))
 
 class Exist(Base):
     __tablename__ = "Exist"
 
+    bookId = Column(Integer, primary_key=True)
+    libId = Column(Integer, primary_key=True)
+
 class User(Base):
     __tablename__ = "User"
+
+    userId = Column(Integer, primary_key=True, index=True)
+    email = Column(String(50))
+    key = Column(String(20))
+    access = Column(Integer, default = 10)

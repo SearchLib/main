@@ -16,7 +16,7 @@ class Databases():
         self.cursor.close()
 
     def execute(self,query,args={}):
-        self.cursor.execute(query,args)
+        self.cursor.execute(query, args)
         row = self.cursor.fetchall()
         return row
 

@@ -52,7 +52,7 @@ def oauth():
     return f"사용자 정보: {json.dumps(user_info, ensure_ascii=False)}"
 
 
-@app.get("/wake/{bookName}")
+@app.route("/wake/{bookName}")
 def getLibrary(bookName: str, db: Session = Depends(get_db)):
     ##현재 유저의 access가 0이면 return
     book = db.query(Book).filter(Book.bookName == bookName).first()
@@ -68,3 +68,6 @@ def getLibrary(bookName: str, db: Session = Depends(get_db)):
         libList.append(lib)
     libList.sort(key=lambda x: x.distance)
     return libList
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8080)

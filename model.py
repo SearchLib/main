@@ -1,6 +1,6 @@
 __package__ = "main"
 
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, BigInteger
 from sqlalchemy.orm import validates, declarative_base
 from database import Base
 import datetime
@@ -33,12 +33,8 @@ class Exist(Base):
 class User(Base):
     __tablename__ = "User"
 
-    userId = Column(Integer, primary_key=True, index=True)
+    userId = Column(BigInteger, primary_key=True, index=True)
     access = Column(Integer, default = 10)
-    
-    def __init__(self, userId, access):
-        self.userId = userId
-        self.access = access
 
 class Log(Base):
     __tablename__ = "logs"

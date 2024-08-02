@@ -1,17 +1,13 @@
 from flask import Flask, redirect, request
 import requests
 import json
-
+import databaseURL
 app = Flask(__name__)
-
-# Kakao 앱 정보
-CLIENT_ID = "e1ba7e4de7d46b4322f62195015262e2"
-REDIRECT_URI = "http://localhost:3000/oauth"
 
 # 로그인 URL 생성
 @app.route('/login')
 def login():
-    kakao_auth_url = f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}"
+    kakao_auth_url = f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={databaseURL.CLIENT_ID}&redirect_uri={databaseURLREDIRECT_URI}"
     return redirect(kakao_auth_url)
 
 # 인증 코드 받기 및 액세스 토큰 요청
@@ -21,8 +17,8 @@ def oauth():
     token_url = "https://kauth.kakao.com/oauth/token"
     data = {
         "grant_type": "authorization_code",
-        "client_id": CLIENT_ID,
-        "redirect_uri": REDIRECT_URI,
+        "client_id": databaseURL.CLIENT_ID,
+        "redirect_uri": databaseURL.REDIRECT_URI,
         "code": code,
     }
     token_response = requests.post(token_url, data=data)
@@ -38,6 +34,3 @@ def oauth():
     user_info = user_info_response.json()
 
     return f"사용자 정보: {json.dumps(user_info, ensure_ascii=False)}"
-
-if __name__ == '__main__':
-    app.run(debug=True, port=3000)

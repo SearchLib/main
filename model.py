@@ -3,9 +3,7 @@ __package__ = "main"
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import validates, declarative_base
 from database import Base
-
-import sys
-import os
+import datetime
 
 class Book(Base):
     __tablename__ = "Book"
@@ -39,3 +37,13 @@ class User(Base):
     email = Column(String(50))
     key = Column(String(20))
     access = Column(Integer, default = 10)
+
+class Log(Base):
+    __tablename__ = "logs"
+    id = Column(Integer, primary_key=True, index=True)
+    client_ip = Column(String, index=True)
+    method = Column(String)
+    url = Column(String)
+    status_code = Column(Integer)
+    process_time = Column(Float)
+    timestamp = Column(String, default=datetime.datetime.now())

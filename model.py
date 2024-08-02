@@ -36,6 +36,8 @@ class User(Base):
     __tablename__ = "User"
 
     userId = Column(Integer, primary_key=True, index=True)
-    email = Column(String(50))
-    key = Column(String(20))
     access = Column(Integer, default = 10)
+
+    def __init__(self, userId, access):
+        self.userId = userId
+        self.access = access

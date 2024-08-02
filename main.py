@@ -20,6 +20,9 @@ def get_db():
     finally:
         db.close()
 
+Session = Depends(get_db)
+db = Session
+
 # 로그인 URL 생성
 @app.route('/login')
 def login():
@@ -48,6 +51,9 @@ def oauth():
     }
     user_info_response = requests.get(user_info_url, headers=headers)
     user_info = user_info_response.json()
+
+    user = User(user_info.get("id"), 10)
+    db.add(user)
 
     return f"사용자 정보: {json.dumps(user_info, ensure_ascii=False)}"
 

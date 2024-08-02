@@ -59,7 +59,7 @@ def oauth():
 
 
 @app.route("/wake/{bookName}")
-def getLibrary(bookName: str, db: Session = Depends(get_db)):
+def getLibrary(bookName: str):
     
     book = db.query(Book).filter(Book.bookName == bookName).first()
     if book is None:

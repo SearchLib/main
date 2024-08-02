@@ -1,10 +1,12 @@
 __package__ = "main"
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, registry
 from databaseURL import Host, DBname, User, Password, Port
 import psycopg2
+
+Base = registry().generate_base()
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=create_engine(f"postgresql://{User}:{Password}@{Host}:{Port}/{DBname}"))
 
 class Databases():
     def __init__(self):

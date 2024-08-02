@@ -6,6 +6,7 @@ from sqlalchemy import func
 from pydantic import BaseModel
 from model import Book, Library, Exist, User
 from database import SessionLocal
+import login
 
 import sys
 import os
@@ -18,6 +19,27 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@app.post("/wake")
+def Login(user: User, db: Session = Depends(get_db)):
+    login(user, db)
+    
+    ##db 업로드
+    conn = db.connect()
+    cur =  conn.cursor()
+    cur.execute("Drop table if exists Book")
+
+    cur.execute("Create table Book (bookId int primary key, callNum1 varchar(10), callNum2 varchar(10), bookName varchar(255), writer varchar(30), published int)")
+
+    with open("Book.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            cur.execute("INSERT INTO Book VALUES (%s, %s, %s, %s, %s, %s)", row)
+    conn.commit()
+    
+    return {"message": "Login success"}
+
 
 @app.get("/wake/{bookName}")
 def getLibrary(bookName: str, db: Session = Depends(get_db)):

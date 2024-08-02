@@ -10,6 +10,8 @@ import databaseURL
 from flask import Flask, redirect, request
 import requests
 import json
+import datetime
+import time
 
 app = Flask(__name__)
 
@@ -54,13 +56,12 @@ def oauth():
 
     user = User(user_info.get("id"), 10)
     db.add(user)
-
+    
     return f"사용자 정보: {json.dumps(user_info, ensure_ascii=False)}"
 
 
 @app.route("/wake/{bookName}")
 def getLibrary(bookName: str, db: Session = Depends(get_db)):
-    
     book = db.query(Book).filter(Book.bookName == bookName).first()
     if book is None:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -73,6 +74,26 @@ def getLibrary(bookName: str, db: Session = Depends(get_db)):
         libList.append(lib)
     libList.sort(key=lambda x: x.distance)
     return libList
+@app.before_request
+def before_request():
+    request.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    if request.endpoint != 'static':
+        process_time = time.time() - request.start_time
+        log_entry = Log(
+            client_ip=request.remote_addr,
+            method=request.method,
+            url=request.path,
+            status_code=response.status_code,
+            process_time=process_time,
+            timestamp=datetime.datetime.now()
+        )
+        db.session.add(log_entry)
+        db.session.commit()
+    return response
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000)

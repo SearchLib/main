@@ -9,9 +9,6 @@ from database import SessionLocal
 import current_location
 import databaseURL
 import requests
-import json
-import datetime
-import time
 
 app = FastAPI()
 
@@ -25,7 +22,7 @@ def get_db():
 # 로그인 URL 생성
 @app.get('/login')
 def login():
-    kakao_auth_url = f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={databaseURL.CLIENT_ID}&redirect_uri={databaseURL.REDIRECT_URI}"
+    kakao_auth_url = f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={databaseURL.CLIENT_ID}&redirect_uri={databaseURL.REDIRECT_URI}&prompt=login"
     return RedirectResponse(url=kakao_auth_url)
 
 # 인증 코드 받기 및 액세스 토큰 요청
@@ -51,9 +48,10 @@ def oauth(request: Request, db: Session = Depends(get_db)):
     user_info_response = requests.get(user_info_url, headers=headers)
     user_info = user_info_response.json()
 
-    user = User(userId=user_info.get('id'), access=10)
-    db.add(user)
-    db.commit()
+    if(db.query(User).filter(User.userId == user_info.get('id')).first() is None):
+        user = User(userId=user_info.get('id'), access=10)
+        db.add(user)
+        db.commit()
     
     return {"user_info": user_info}
 

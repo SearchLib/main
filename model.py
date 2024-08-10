@@ -30,7 +30,7 @@ class Exist(Base):
     bookId = Column(Integer, primary_key=True)
     libId = Column(Integer, primary_key=True)
 
-class User(Base):
+class Member(Base):
     __tablename__ = "User"
 
     userId = Column(BigInteger, primary_key=True, index=True)
@@ -38,6 +38,7 @@ class User(Base):
 
 class Log(Base):
     __tablename__ = "logs"
+    
     id = Column(Integer, primary_key=True, index=True)
     client_ip = Column(String, index=True)
     method = Column(String)

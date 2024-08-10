@@ -81,7 +81,9 @@ def getLibrary(bookName: str, request: Request, id: int = Header(None), db: Sess
             libList.append(library)
     
     libList.sort(key=lambda x: x.distance)
-    return {"libraries": [lib.__dict__ for lib in libList]}
+    top5 = libList[:5]
+    
+    return {"libraries": [lib.__dict__ for lib in top5]}
 
 
 if __name__ == "__main__":

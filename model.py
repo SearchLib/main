@@ -30,7 +30,7 @@ class Exist(Base):
     bookId = Column(Integer, primary_key=True)
     libId = Column(Integer, primary_key=True)
 
-class Member(Base):
+class User(Base):
     __tablename__ = "User"
 
     userId = Column(BigInteger, primary_key=True, index=True)

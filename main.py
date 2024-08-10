@@ -1,6 +1,6 @@
 __package__ = "main"
 
-from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi import FastAPI, Depends, HTTPException, Request, Header
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -56,7 +56,15 @@ def oauth(request: Request, db: Session = Depends(get_db)):
     return {"user_info": user_info}
 
 @app.get("/wake/{bookName}")
-def getLibrary(bookName: str, db: Session = Depends(get_db)):
+def getLibrary(bookName: str, request: Request, id: int = Header(None), db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.userId == id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail=f"{id}, User not found")
+    if user.access == 0:
+        raise HTTPException(status_code=404, detail="Access limit exceeded")
+    user.access -= 1
+    db.commit()
+
     book = db.query(Book).filter(Book.bookName == bookName).first()
     if book is None:
         raise HTTPException(status_code=404, detail="Book not found")

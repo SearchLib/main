@@ -1,6 +1,7 @@
 from databaseURL import Host, DBname, User, Password, Port
 import psycopg2
 import csv
+import time
 
 conn = psycopg2.connect(host = Host, dbname = DBname, user = User, password = Password, port = Port)
 cur = conn.cursor()
@@ -10,6 +11,7 @@ def empty_string_to_none(value):
 
 with open('Book.csv', 'r', encoding='utf-8') as f:
     print("================================================= Book.csv =================================================")
+    time.sleep(5)
     cnt = 1
     reader = csv.reader(f)
     next(reader)
@@ -20,10 +22,11 @@ with open('Book.csv', 'r', encoding='utf-8') as f:
         row
         )
         cnt += 1
-        print(cnt)
+        print(f"Book: {cnt}")
 
 with open('Exist.csv', 'r', encoding='utf-8') as f:
     print("================================================= Exist.csv =================================================")
+    time.sleep(5)
     cnt = 1
     reader = csv.reader(f)
     next(reader)
@@ -34,10 +37,11 @@ with open('Exist.csv', 'r', encoding='utf-8') as f:
         row
         )
         cnt += 1
-        print(cnt)
+        print(f"Exist: {cnt}")
 
-with open('Lib.csv', 'r', encoding='utf-8') as f:
+with open('Lib.csv', 'r', encoding='EUC-KR') as f:
     print("================================================= Lib.csv =================================================")
+    time.sleep(5)
     cnt = 1
     reader = csv.reader(f)
     next(reader)
@@ -48,7 +52,7 @@ with open('Lib.csv', 'r', encoding='utf-8') as f:
         row
         )
         cnt += 1
-        print(cnt)
+        print(f"Library: {cnt}")
 
 
 conn.commit()

@@ -9,6 +9,9 @@ from database import SessionLocal
 import current_location
 import databaseURL
 import requests
+import threading
+from datetime import datetime
+import time
 
 app = FastAPI()
 
@@ -85,7 +88,22 @@ def getLibrary(bookName: str, request: Request, id: int = Header(None), db: Sess
     
     return {"libraries": [lib.__dict__ for lib in top5]}
 
+def Access_Update():
+    while(True):
+        current_time = datetime.now()
+        if current_time.hour == 0 and current_time.minute == 0:
+            db = SessionLocal()
+            db.query(User).update({User.access: 10})
+            db.commit()
+            db.close()
+            time.sleep(86400)
+        else:
+            time.sleep(60)
 
 if __name__ == "__main__":
     import uvicorn
+
+    thread = threading.Thread(target = Access_Update, daemon = True)
+    thread.start()
+
     uvicorn.run(app, host="127.0.0.1", port=3000)

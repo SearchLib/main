@@ -8,12 +8,12 @@ import datetime
 class Book(Base):
     __tablename__ = "Book"
 
-    bookId = Column(Integer, primary_key=True, index=True)
-    callNum1 = Column(String(10))
-    callNum2 = Column(String(10))
-    bookName = Column(String(255))
-    writer = Column(String(30))
-    published = Column(Integer)
+    bookId = Column(String(50), primary_key=True, index=True)
+    callNum1 = Column(String(50))
+    callNum2 = Column(String(50))
+    bookName = Column(String(700), primary_key=True)
+    writer = Column(String(700))
+    published = Column(String(50))
 
 class Library(Base):
     __tablename__ = "Library"
@@ -34,7 +34,7 @@ class User(Base):
     __tablename__ = "User"
 
     userId = Column(BigInteger, primary_key=True, index=True)
-    access = Column(Integer, default = 10)
+    access = Column(Integer, default = 10) 
 
 class Log(Base):
     __tablename__ = "logs"
